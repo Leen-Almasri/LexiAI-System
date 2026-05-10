@@ -14,18 +14,7 @@
   <i>An end-to-end AI pipeline that cleans, enriches, and serves an AI terminology glossary with an interactive web interface.</i>
 </p>
 
----
 
-## ⚠️ Important Notice for Judges
-
-* Phases **1, 2, and 3 do NOT need to be executed**
-* All outputs have already been generated and included in the repository
-* These phases required OpenAI API execution over 1000+ terms and are already pre-run
-
-### 👉 Only Phase 4 & 5 are required:
-
-* Run FastAPI backend (Phase 4)
-* Open frontend in browser (Phase 5)
 
 ---
 
