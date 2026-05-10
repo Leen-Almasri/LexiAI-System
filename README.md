@@ -1,15 +1,4 @@
  LexiAI System
-<p align="center">
-  <img src="https://img.shields.io/badge/Status-Completed-brightgreen?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Python-3.9+-blue?style=for-the-badge&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white" />
-  <img src="https://img.shields.io/badge/OpenAI-GPT--4o--mini-412991?style=for-the-badge&logo=openai&logoColor=white" />
-  <img src="https://img.shields.io/badge/Frontend-HTML%2FCSS%2FJS-E34F26?style=for-the-badge&logo=html5&logoColor=white" />
-  <img src="https://img.shields.io/badge/Platform-Google%20Colab-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white" />
-</p>
-<p align="center">
-  <i>An end-to-end AI pipeline that cleans, enriches, and serves an AI terminology glossary — with a fully interactive web interface.</i>
-</p>
 
 ⚠️ Important Notice for Judges
 
