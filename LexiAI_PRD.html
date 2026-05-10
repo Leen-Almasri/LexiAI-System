@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LexiAI — Product Requirements Document</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:       #08102A;
+    --navy-mid:   #0F1C3F;
+    --navy-card:  #132050;
+    --teal:       #00C9A7;
+    --teal-dim:   #009E84;
+    --amber:      #F5A623;
+    --blue:       #4A90E2;
+    --coral:      #FF6F61;
+    --purple:     #9B7FE8;
+    --text-1:     #EEF2FF;
+    --text-2:     #99AACE;
+    --text-3:     #556080;
+    --border:     rgba(0,201,167,0.14);
+    --border-2:   rgba(74,144,226,0.18);
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--navy);
+    color: var(--text-1);
+    font-family: 'Sora', sans-serif;
+    font-size: 15px;
+    line-height: 1.8;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body::before {
+    content:'';
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      linear-gradient(rgba(0,201,167,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,201,167,.04) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+  .page-wrap {
+    position: relative; z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+  }
+  /* COVER */
+  .cover {
+    min-height: 96vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    padding: 80px 0 60px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .cover-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0,201,167,.1);
+    border: 1px solid rgba(0,201,167,.3);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 12px; font-weight: 600; letter-spacing: .08em;
+    color: var(--teal); text-transform: uppercase;
+    margin-bottom: 36px;
+  }
+  .cover-badge::before {
+    content:''; width:7px; height:7px; border-radius:50%;
+    background: var(--teal); display:inline-block;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100%{ opacity:1; transform:scale(1); }
+    50%{ opacity:.5; transform:scale(1.3); }
+  }
+  .cover-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(64px, 10vw, 100px);
+    line-height: 1;
+    letter-spacing: -2px;
+    background: linear-gradient(120deg, #fff 30%, var(--teal) 70%, var(--amber) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+  }
+  .cover-tagline {
+    font-size: 18px; font-weight: 300; color: var(--text-2);
+    max-width: 560px; margin-bottom: 48px; line-height: 1.6;
+  }
+  .cover-tagline span { color: var(--teal); font-weight: 500; }
+  .cover-meta {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    margin-bottom: 60px;
+  }
+  .meta-chip {
+    background: var(--navy-card);
+    border: 1px solid var(--border-2);
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 13px;
+  }
+  .meta-chip strong { color: var(--blue); display: block; font-size: 11px; letter-spacing: .07em; text-transform: uppercase; margin-bottom: 2px; }
+  .cover-divider {
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, var(--teal), transparent);
+    margin-top: 20px;
+  }
+  .cover-glow {
+    position:absolute; top:10%; right:-5%;
+    width:420px; height:420px; border-radius:50%;
+    background: radial-gradient(circle, rgba(0,201,167,.12) 0%, transparent 70%);
+    pointer-events:none;
+  }
+  /* SECTIONS */
+  section {
+    padding: 64px 0;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+  .sec-label {
+    font-size: 11px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--teal);
+    margin-bottom: 10px;
+  }
+  .sec-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(26px, 3.5vw, 36px);
+    line-height: 1.15;
+    color: var(--text-1);
+    margin-bottom: 32px;
+  }
+  p { color: var(--text-2); margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+  strong { color: var(--text-1); font-weight: 600; }
+  /* CARDS */
+  .card {
+    background: var(--navy-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 32px;
+  }
+  .card-grid { display: grid; gap: 20px; }
+  .card-grid.col-2 { grid-template-columns: repeat(2, 1fr); }
+  .card-grid.col-3 { grid-template-columns: repeat(3, 1fr); }
+  @media(max-width:680px){
+    .card-grid.col-2, .card-grid.col-3 { grid-template-columns: 1fr; }
+  }
+  /* HIGHLIGHT BOXES */
+  .highlight-box {
+    border-left: 4px solid;
+    border-radius: 0 12px 12px 0;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    background: rgba(255,255,255,.03);
+  }
+  .highlight-box.teal { border-color: var(--teal); }
+  .highlight-box.amber { border-color: var(--amber); }
+  .highlight-box.blue  { border-color: var(--blue); }
+  .highlight-box.coral { border-color: var(--coral); }
+  .highlight-box .hb-label {
+    font-size: 11px; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; margin-bottom: 10px;
+  }
+  .highlight-box.teal .hb-label { color: var(--teal); }
+  .highlight-box.amber .hb-label { color: var(--amber); }
+  .highlight-box.blue  .hb-label { color: var(--blue); }
+  .highlight-box.coral .hb-label { color: var(--coral); }
+  /* TEAM CARDS */
+  .team-card {
+    background: var(--navy-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    transition: border-color .2s;
+  }
+  .team-card:hover { border-color: rgba(0,201,167,.4); }
+  .team-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px; color: #fff;
+    margin-bottom: 16px;
+  }
+  .av-teal  { background: linear-gradient(135deg, #00C9A7, #009E84); }
+  .av-amber { background: linear-gradient(135deg, #F5A623, #D4891A); }
+  .av-blue  { background: linear-gradient(135deg, #4A90E2, #2C6CB3); }
+  .av-coral { background: linear-gradient(135deg, #FF6F61, #D94F43); }
+  .team-name { font-size: 15px; font-weight: 600; color: var(--text-1); margin-bottom: 4px; }
+  .team-role { font-size: 12px; color: var(--text-3); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .07em; }
+  .team-task {
+    font-size: 13px; color: var(--text-2);
+    background: rgba(0,0,0,.2); border-radius: 8px; padding: 10px 14px;
+    border-left: 3px solid var(--teal);
+    line-height: 1.5;
+  }
+  /* TECH STACK */
+  .tech-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 100px;
+    padding: 7px 16px;
+    font-size: 13px; color: var(--text-2);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .tech-badge .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-teal   { background: var(--teal); }
+  .dot-amber  { background: var(--amber); }
+  .dot-blue   { background: var(--blue); }
+  .dot-coral  { background: var(--coral); }
+  .dot-purple { background: var(--purple); }
+  .tech-group { margin-bottom: 28px; }
+  .tech-group-label {
+    font-size: 12px; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--text-3);
+    margin-bottom: 12px;
+  }
+  .tech-badges { display: flex; flex-wrap: wrap; gap: 10px; }
+  /* ARCHITECTURE */
+  .arch-flow {
+    display: flex; align-items: center; gap: 0;
+    overflow-x: auto; padding: 16px 0;
+  }
+  .arch-node {
+    background: var(--navy-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+    text-align: center;
+    min-width: 140px; flex-shrink: 0;
+  }
+  .arch-node .an-icon { font-size: 26px; margin-bottom: 8px; }
+  .arch-node .an-title { font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 4px; }
+  .arch-node .an-sub { font-size: 11px; color: var(--text-3); font-family: 'JetBrains Mono', monospace; }
+  .arch-arrow { display: flex; align-items: center; padding: 0 8px; flex-shrink: 0; color: var(--teal); font-size: 20px; }
+  /* DATA PIPELINE */
+  .pipeline { display: flex; flex-direction: column; gap: 0; }
+  .pipeline-step {
+    display: flex; gap: 24px; align-items: flex-start;
+    padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,.04);
+  }
+  .pipeline-step:last-child { border-bottom: none; }
+  .pipeline-num {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--teal); color: var(--navy);
+    font-weight: 700; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .pipeline-content .pc-title { font-weight: 600; color: var(--text-1); margin-bottom: 4px; }
+  .pipeline-content .pc-desc { font-size: 13px; color: var(--text-2); margin: 0; }
+  /* PROMPT BOX */
+  .prompt-box {
+    background: #060D1F;
+    border: 1px solid rgba(0,201,167,.2);
+    border-radius: 14px;
+    padding: 28px 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; line-height: 1.8;
+    color: var(--text-2); overflow-x: auto;
+  }
+  .prompt-box .kw   { color: var(--teal); }
+  .prompt-box .str  { color: var(--amber); }
+  .prompt-box .var  { color: var(--blue); }
+  /* OUTPUT CARD */
+  .output-card {
+    background: #060D1F;
+    border: 1px solid var(--border-2);
+    border-radius: 14px;
+    overflow: hidden; margin-top: 20px;
+  }
+  .output-header {
+    background: rgba(74,144,226,.12);
+    padding: 10px 20px;
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid var(--border-2);
+  }
+  .output-header span { font-size: 12px; color: var(--blue); font-family: 'JetBrains Mono', monospace; }
+  .output-body { padding: 20px 24px; }
+  .output-field { margin-bottom: 14px; }
+  .output-field:last-child { margin-bottom: 0; }
+  .output-field .of-key {
+    font-size: 11px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--teal); margin-bottom: 4px;
+  }
+  .output-field .of-val {
+    font-size: 13px; color: var(--text-2); margin: 0;
+    font-family: 'JetBrains Mono', monospace; line-height: 1.6;
+  }
+  /* STATS */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px; margin-bottom: 36px;
+  }
+  @media(max-width:680px){ .stat-grid { grid-template-columns: repeat(2,1fr); } }
+  .stat-card {
+    background: var(--navy-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 20px; text-align: center;
+  }
+  .stat-card .sc-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px; line-height: 1; margin-bottom: 6px;
+  }
+  .stat-card .sc-label { font-size: 12px; color: var(--text-3); letter-spacing: .06em; text-transform: uppercase; }
+  .stat-card.c-teal  .sc-num { color: var(--teal); }
+  .stat-card.c-amber .sc-num { color: var(--amber); }
+  .stat-card.c-blue  .sc-num { color: var(--blue); }
+  .stat-card.c-coral .sc-num { color: var(--coral); }
+  /* FUTURE WORK */
+  .fw-item {
+    display: flex; gap: 20px; align-items: flex-start;
+    padding: 24px; background: var(--navy-card);
+    border: 1px solid var(--border); border-radius: 14px;
+  }
+  .fw-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .fw-icon.teal  { background: rgba(0,201,167,.15); }
+  .fw-icon.amber { background: rgba(245,166,35,.15); }
+  .fw-title { font-size: 15px; font-weight: 600; color: var(--text-1); margin-bottom: 6px; }
+  .fw-desc  { font-size: 13px; color: var(--text-2); margin: 0; line-height: 1.65; }
+  /* TOC */
+  .toc {
+    background: var(--navy-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 32px; margin: 48px 0;
+  }
+  .toc-title {
+    font-size: 12px; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--teal); margin-bottom: 18px;
+  }
+  .toc-list {
+    list-style: none;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px 40px;
+  }
+  @media(max-width:600px){ .toc-list { grid-template-columns: 1fr; } }
+  .toc-list li a {
+    text-decoration: none; font-size: 14px; color: var(--text-2);
+    display: flex; align-items: center; gap: 10px;
+    padding: 4px 0; transition: color .15s;
+  }
+  .toc-list li a:hover { color: var(--teal); }
+  .toc-list li a .toc-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--text-3); min-width: 20px;
+  }
+  /* API ENDPOINT */
+  .endpoint {
+    background: #060D1F;
+    border: 1px solid var(--border-2);
+    border-radius: 12px;
+    padding: 18px 24px;
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 14px;
+  }
+  .method {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700;
+    padding: 4px 10px; border-radius: 6px; flex-shrink: 0;
+  }
+  .method.get { background: rgba(0,201,167,.2); color: var(--teal); }
+  .ep-path { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--text-1); }
+  .ep-desc { font-size: 12px; color: var(--text-3); margin-left: auto; }
+  /* CODE INLINE */
+  code {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--teal); background: rgba(0,201,167,.1);
+    padding: 1px 6px; border-radius: 4px;
+  }
+  /* FOOTER */
+  footer {
+    text-align: center; padding: 48px 0 24px;
+    color: var(--text-3); font-size: 13px;
+  }
+  footer .f-logo {
+    font-family: 'DM Serif Display', serif; font-size: 28px;
+    background: linear-gradient(120deg, #fff, var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; display: block; margin-bottom: 8px;
+  }
+  @media print {
+    body::before { display:none; }
+    section { page-break-inside: avoid; }
+    .cover  { min-height: auto; padding: 40px 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<!-- ══════════════════════════════════════════
+     COVER
+══════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-glow"></div>
+  <div class="cover-badge">Product Requirements Document &nbsp;·&nbsp; v1.0</div>
+  <div class="cover-logo">LexiAI</div>
+  <p class="cover-tagline">
+    An <span>intelligent glossary assistant</span> that transforms static AI terminology
+    into a rich, interactive learning experience — powered by large language models
+    and built on the ICAIRE dataset.
+  </p>
+  <div class="cover-meta">
+    <div class="meta-chip">
+      <strong>Challenge</strong>AI Glossary Challenge — ICAIRE
+    </div>
+    <div class="meta-chip">
+      <strong>Track</strong>01 · AI Glossary Tools (Featured)
+    </div>
+    <div class="meta-chip">
+      <strong>Partner</strong>Beyond Company
+    </div>
+    <div class="meta-chip">
+      <strong>Platform</strong>Kaggle
+    </div>
+    <div class="meta-chip">
+      <strong>Status</strong>POC completed
+    </div>
+  </div>
+  <div class="cover-divider"></div>
+
+  <div class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <ul class="toc-list">
+      <li><a href="#overview"><span class="toc-num">01</span> Executive Summary</a></li>
+      <li><a href="#problem"><span class="toc-num">02</span> Problem Statement</a></li>
+      <li><a href="#solution"><span class="toc-num">03</span> Proposed Solution</a></li>
+      <li><a href="#team"><span class="toc-num">04</span> Team Members</a></li>
+      <li><a href="#data"><span class="toc-num">05</span> Data Pipeline</a></li>
+      <li><a href="#prompts"><span class="toc-num">06</span> Prompt Engineering</a></li>
+      <li><a href="#api"><span class="toc-num">07</span> Backend API</a></li>
+      <li><a href="#frontend"><span class="toc-num">08</span> Frontend Interface</a></li>
+      <li><a href="#architecture"><span class="toc-num">09</span> System Architecture</a></li>
+      <li><a href="#future"><span class="toc-num">10</span> Future Work</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     01 — EXECUTIVE SUMMARY
+══════════════════════════════════════════ -->
+<section id="overview">
+  <div class="sec-label">01 — Executive Summary</div>
+  <h2 class="sec-title">What is LexiAI?</h2>
+
+  <div class="stat-grid">
+    <div class="stat-card c-teal">
+      <div class="sc-num">1,242</div>
+      <div class="sc-label">Raw Terms</div>
+    </div>
+    <div class="stat-card c-amber">
+      <div class="sc-num">1,115</div>
+      <div class="sc-label">Cleaned Terms</div>
+    </div>
+    <div class="stat-card c-blue">
+      <div class="sc-num">3</div>
+      <div class="sc-label">AI Outputs / Term</div>
+    </div>
+    <div class="stat-card c-coral">
+      <div class="sc-num">2</div>
+      <div class="sc-label">Core Services</div>
+    </div>
+  </div>
+
+  <p>
+    <strong>LexiAI</strong> is an AI-powered web application built on top of the official ICAIRE AI Glossary dataset.
+    Rather than presenting terminology as a static reference, LexiAI pairs each entry with three
+    automatically generated learning artefacts produced by a large language model:
+    a simplified definition, a real-world usage example, and a relatable everyday analogy.
+  </p>
+  <p>
+    The project was submitted to the <strong>ICAIRE AI Glossary Challenge</strong> under Track 01 — AI Glossary Tools,
+    fulfilling the challenge objective of turning curated lexical resources into culturally aware,
+    user-friendly digital tools that promote education in responsible artificial intelligence.
+  </p>
+
+  <div class="highlight-box teal" style="margin-top:28px;">
+    <div class="hb-label">Core Value Proposition</div>
+    <p style="margin:0;">
+      LexiAI converts the ICAIRE glossary from a fixed reference archive into a
+      <strong>dynamic learning companion</strong> — searchable, context-rich, and built
+      to make AI concepts accessible to students, researchers, and practitioners at every level.
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     02 — PROBLEM
+══════════════════════════════════════════ -->
+<section id="problem">
+  <div class="sec-label">02 — Problem Statement</div>
+  <h2 class="sec-title">Why existing glossaries fall short</h2>
+
+  <p>
+    Specialised AI glossaries such as the ICAIRE dataset provide authoritative, well-sourced
+    definitions. However, they are designed primarily as <strong>reference archives</strong> —
+    not learning tools — which creates a measurable gap for the audiences who need them most.
+  </p>
+
+  <div class="card-grid col-2" style="margin-top:28px;">
+    <div class="highlight-box amber" style="margin:0;">
+      <div class="hb-label">No Practical Context</div>
+      <p style="margin:0; font-size:14px;">
+        Definitions are written in precise technical language. Readers gain no sense of
+        how a term manifests in real products or workflows — leaving the gap between
+        theory and practice wide open.
+      </p>
+    </div>
+    <div class="highlight-box blue" style="margin:0;">
+      <div class="hb-label">Steep Cognitive Load</div>
+      <p style="margin:0; font-size:14px;">
+        Technical jargon embedded in the original definitions makes the resource inaccessible
+        to beginners and non-specialists, slowing interdisciplinary adoption of AI knowledge.
+      </p>
+    </div>
+    <div class="highlight-box teal" style="margin:0;">
+      <div class="hb-label">No Memory Scaffolding</div>
+      <p style="margin:0; font-size:14px;">
+        Learning science shows that analogies and examples dramatically improve retention.
+        Current glossaries provide neither, leaving users to build mental models unaided.
+      </p>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════
+     HOW THE IDEA EMERGED
+══════════════════════════════════════════ -->
+<section id="idea">
+  <div class="sec-label">Origin Story</div>
+  <h2 class="sec-title">How the Idea Emerged</h2>
+
+  <p>
+    While using the ICAIRE AI Glossary as end users, we started identifying key usability issues.
+    One of the main problems we noticed was the <strong>lack of examples</strong>, which made some concepts
+    difficult to understand. This insight led to the idea of enriching the glossary with
+    AI-generated examples using large language models (LLMs) to improve clarity and user comprehension.
+  </p>
+</section>
+
+<!-- ══════════════════════════════════════════
+     03 — SOLUTION
+══════════════════════════════════════════ -->
+<section id="solution">
+  <div class="sec-label">03 — Proposed Solution</div>
+  <h2 class="sec-title">LexiAI in a nutshell</h2>
+
+  <p>
+    LexiAI addresses each gap identified above through a three-layer system:
+    a <strong>cleaned dataset</strong>, an <strong>LLM enrichment layer</strong>,
+    and a <strong>user-facing web interface</strong>.
+    For every canonical term in the glossary, the system automatically generates and stores three artefacts.
+  </p>
+
+  <div class="card-grid col-3" style="margin-top:28px;">
+    <div class="card" style="border-color: rgba(0,201,167,.3);">
+      <div style="font-size:30px; margin-bottom:14px;">📖</div>
+      <div style="font-weight:600; color:var(--teal); margin-bottom:8px; font-size:14px;">Simple Definition</div>
+      <p style="font-size:13px; margin:0;">
+        A plain-language restatement of the official ICAIRE definition,
+        written for a reader with no prior background in the subject area.
+      </p>
+    </div>
+    <div class="card" style="border-color: rgba(245,166,35,.3);">
+      <div style="font-size:30px; margin-bottom:14px;">🌐</div>
+      <div style="font-weight:600; color:var(--amber); margin-bottom:8px; font-size:14px;">Real-World Example</div>
+      <p style="font-size:13px; margin:0;">
+        A concrete scenario drawn from recognisable products and services
+        (e.g. Google, Netflix, Amazon) illustrating the term in active use.
+      </p>
+    </div>
+    <div class="card" style="border-color: rgba(74,144,226,.3);">
+      <div style="font-size:30px; margin-bottom:14px;">🔗</div>
+      <div style="font-weight:600; color:var(--blue); margin-bottom:8px; font-size:14px;">Analogy</div>
+      <p style="font-size:13px; margin:0;">
+        A relatable comparison from everyday life that maps the abstract
+        concept onto familiar experience, supporting long-term retention.
+      </p>
+    </div>
+  </div>
+
+  <p style="margin-top:28px;">
+    Users access this enriched content through a web application built using HTML, backed by a FastAPI REST API. The interface allows direct term lookup, returning all three enriched fields alongside the original ICAIRE definition in a clean, readable layout — no registration required.
+  </p>
+</section>
+
+<!-- ══════════════════════════════════════════
+     04 — TEAM
+══════════════════════════════════════════ -->
+<section id="team">
+  <div class="sec-label">04 — Team Members</div>
+  <h2 class="sec-title">The people behind LexiAI</h2>
+
+  <div class="card-grid col-2">
+
+    <div class="team-card">
+      <div class="team-avatar av-teal">L</div>
+      <div class="team-name">Leen Khalid Al-Masri</div>
+      <div class="team-role">Team Leader &nbsp;·&nbsp; Artificial Intelligence</div>
+      <div class="team-task">
+        Responsible for prompt engineering strategy and LLM integration —
+        designing the structured prompts that guide GPT-4o-mini to produce
+        consistent, high-quality educational outputs at scale.
+      </div>
+    </div>
+
+    <div class="team-card">
+      <div class="team-avatar av-amber">R</div>
+      <div class="team-name">Rahaf Saad Al-Shamri</div>
+      <div class="team-role">Software Engineering</div>
+      <div class="team-task">
+        Responsible for the frontend web interface — building the Streamlit
+        application that presents enriched glossary content in an intuitive,
+        accessible layout for end users.
+      </div>
+    </div>
+
+    <div class="team-card">
+      <div class="team-avatar av-blue">N</div>
+      <div class="team-name">Noura Bandar Alshaigi</div>
+      <div class="team-role">Information Technology</div>
+      <div class="team-task">
+        Co-responsible for prompt engineering alongside the team leader,
+        and primary author of the project's comprehensive technical documentation.
+      </div>
+    </div>
+
+    <div class="team-card">
+      <div class="team-avatar av-coral">R</div>
+      <div class="team-name">Rawan Fahad Al-Otaibi</div>
+      <div class="team-role">Artificial Intelligence</div>
+      <div class="team-task">
+        Responsible for the complete data cleaning pipeline — identifying
+        and resolving quality issues in the raw ICAIRE dataset before it
+        enters the LLM enrichment workflow.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     05 — DATA PIPELINE
+══════════════════════════════════════════ -->
+<section id="data">
+  <div class="sec-label">05 — Data Pipeline</div>
+  <h2 class="sec-title">From raw glossary to clean dataset</h2>
+
+  <p>
+    The ICAIRE AI Glossary JSON file contained <strong>1,242 terms</strong> at ingestion.
+    A structured cleaning pipeline was applied before any LLM enrichment to ensure the model
+    received consistent, well-formed input — preventing low-quality or misleading outputs.
+  </p>
+
+  <div class="card" style="margin-top:28px; padding:0; overflow:hidden;">
+    <div style="padding:18px 28px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;">
+      <div style="width:10px;height:10px;border-radius:50%;background:var(--coral);"></div>
+      <div style="width:10px;height:10px;border-radius:50%;background:var(--amber);"></div>
+      <div style="width:10px;height:10px;border-radius:50%;background:var(--teal);"></div>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-3); margin-left:8px;">data_cleaning.py</span>
+    </div>
+    <div style="padding:28px 32px;">
+      <div class="pipeline">
+
+        <div class="pipeline-step">
+          <div class="pipeline-num">1</div>
+          <div class="pipeline-content">
+            <div class="pc-title">Load raw JSON dataset</div>
+            <p class="pc-desc">Read <code>ai_glossary.json</code> into a Pandas DataFrame. Initial shape: 1,242 rows across multiple columns including <code>term</code>, <code>definition</code>, and <code>redirect_to</code>. Exploratory analysis confirmed the presence of four distinct quality issues requiring targeted remediation.</p>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="pipeline-num">2</div>
+          <div class="pipeline-content">
+            <div class="pc-title">Remove hidden Arabic characters</div>
+            <p class="pc-desc">A regex pattern targeting Unicode range U+0600–U+06FF (Arabic block) and U+064B–U+065F (diacritic range) was applied to both the <code>term</code> and <code>definition</code> columns. These characters were invisible during display but caused tokenisation inconsistencies during LLM inference.</p>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="pipeline-num">3</div>
+          <div class="pipeline-content">
+            <div class="pc-title">Strip "Also called" alias annotations</div>
+            <p class="pc-desc">Many definitions contained trailing alias notes such as <em>"… Also called 'HAR'."</em> These phrases add redundancy without definitional value. They were removed via regex substitution while preserving proper sentence termination with a full stop.</p>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="pipeline-num">4</div>
+          <div class="pipeline-content">
+            <div class="pc-title">Drop 127 redirect entries</div>
+            <p class="pc-desc">Terms whose <code>redirect_to</code> field was non-null were treated as aliases pointing to canonical equivalents. Since the enrichment pipeline targets canonical definitions only, all 127 redirect entries were removed to eliminate duplicate processing and semantic ambiguity.</p>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="pipeline-num">5</div>
+          <div class="pipeline-content">
+            <div class="pc-title">Remove "See X" stub definitions</div>
+            <p class="pc-desc">Definitions matching the pattern <em>"See &lt;term&gt;"</em> were identified using a regex match on the definition field. These stubs carry no definitional content and would produce low-quality outputs if passed through to the LLM enrichment step.</p>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="pipeline-num">6</div>
+          <div class="pipeline-content">
+            <div class="pc-title">Normalise whitespace and select final columns</div>
+            <p class="pc-desc">Leading and trailing whitespace was stripped from all string fields. The final cleaned dataset retains only two columns — <code>term</code> and <code>definition</code> — and is exported as <code>ai_glossary_clean.json</code> (UTF-8, pretty-printed JSON) containing 1,115 canonical terms ready for enrichment.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="card-grid col-3" style="margin-top:20px;">
+    <div class="card" style="text-align:center;">
+      <div style="font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">Before Cleaning</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:32px;color:var(--coral);">1,242</div>
+      <div style="font-size:12px;color:var(--text-3);">total terms</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">Removed</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:32px;color:var(--amber);">127</div>
+      <div style="font-size:12px;color:var(--text-3);">redirect &amp; stub entries</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">After Cleaning</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:32px;color:var(--teal);">1,115</div>
+      <div style="font-size:12px;color:var(--text-3);">clean, canonical terms</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     06 — PROMPT ENGINEERING
+══════════════════════════════════════════ -->
+<section id="prompts">
+  <div class="sec-label">06 — Prompt Engineering</div>
+  <h2 class="sec-title">Turning definitions into learning experiences</h2>
+
+  <p>
+    The core intellectual contribution of LexiAI lies in its prompt design.
+    Each term is passed to <strong>GPT-4o-mini</strong> along with a carefully structured
+    instruction set that enforces a consistent three-part output format returned as
+    structured JSON — enabling reliable downstream parsing and storage without post-processing overhead.
+  </p>
+  <p>
+    Batching is applied in configurable increments (default: 100 terms per batch) with
+    automatic checkpoint saving after each batch, making the pipeline resilient to
+    API interruptions and easy to resume without reprocessing completed terms.
+  </p>
+
+  <div style="margin-top:28px;">
+    <div class="prompt-box">
+<span class="kw">SYSTEM</span><br>
+<span style="color:var(--amber);">You are an AI educational tutor.</span><br><br>
+<span class="kw">USER</span><br>
+Term:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:var(--blue);">{term}</span><br>
+Definition: <span style="color:var(--blue);">{definition}</span><br><br>
+Task:<br>
+<span style="color:var(--amber);">1. Rewrite the definition in a simple, accessible way.</span><br>
+<span style="color:var(--amber);">2. Provide a real-world example (e.g. how Google, Netflix, or Amazon uses it).</span><br>
+<span style="color:var(--amber);">3. Create an everyday analogy that a non-specialist can relate to.</span><br><br>
+IMPORTANT:<br>
+Return <span class="kw">ONLY</span> a valid JSON object — no preamble, no markdown fences:<br><br>
+{<br>
+&nbsp;&nbsp;<span style="color:var(--amber);">"simple_definition"</span>: <span style="color:var(--teal);">"..."</span>,<br>
+&nbsp;&nbsp;<span style="color:var(--amber);">"example"</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:var(--teal);">"..."</span>,<br>
+&nbsp;&nbsp;<span style="color:var(--amber);">"analogy"</span>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:var(--teal);">"..."</span><br>
+}
+    </div>
+  </div>
+
+  <div class="output-card">
+    <div class="output-header">
+      <span>&#9654; Sample enriched output &nbsp;—&nbsp; term: "Natural Language Processing"</span>
+    </div>
+    <div class="output-body">
+      <div class="output-field">
+        <div class="of-key">Simple Definition</div>
+        <p class="of-val">Natural Language Processing (NLP) is a branch of AI that helps computers understand, interpret, and generate human language — allowing machines to "read" and "write" text much like a person does.</p>
+      </div>
+      <div class="output-field">
+        <div class="of-key">Real-World Example</div>
+        <p class="of-val">When you type a question into Google Search and it instantly understands your intent — even if phrased casually — that's NLP at work. Gmail's Smart Reply also uses NLP to suggest short responses to incoming emails.</p>
+      </div>
+      <div class="output-field">
+        <div class="of-key">Analogy</div>
+        <p class="of-val">Think of NLP as teaching a computer to be a skilled interpreter — not just translating words between languages, but grasping tone, intent, and context the way a human would in a live conversation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     07 — BACKEND API
+══════════════════════════════════════════ -->
+<section id="api">
+  <div class="sec-label">07 — Backend API</div>
+  <h2 class="sec-title">FastAPI REST service</h2>
+
+  <p>
+    The enriched glossary is served through a lightweight <strong>FastAPI</strong> application
+    deployed via <strong>Uvicorn</strong>. The API acts as the single source of truth between
+    the stored dataset and the frontend, providing clean separation of concerns and a clear
+    contract for future integrations.
+  </p>
+
+  <div style="margin-top:28px;">
+    <div class="endpoint">
+      <span class="method get">GET</span>
+      <span class="ep-path">/</span>
+      <span class="ep-desc">Health check — confirms the service is running</span>
+    </div>
+    <div class="endpoint">
+      <span class="method get">GET</span>
+      <span class="ep-path">/term/{term_name}</span>
+      <span class="ep-desc">Returns the full enriched record for a given AI term</span>
+    </div>
+  </div>
+
+  <div class="highlight-box blue" style="margin-top:24px;">
+    <div class="hb-label">Response Fields</div>
+    <p style="margin:0; font-family:'JetBrains Mono',monospace; font-size:13px; line-height:2.2; color:var(--text-2);">
+      term &nbsp;·&nbsp; original_definition &nbsp;·&nbsp; simple_definition &nbsp;·&nbsp; example &nbsp;·&nbsp; analogy
+    </p>
+  </div>
+
+  <p style="margin-top:20px;">
+    Lookup is <strong>case-insensitive</strong>. If a requested term does not exist in the
+    dataset, the API returns <code>HTTP 404</code> with a descriptive error message.
+    All response bodies are UTF-8 encoded JSON.
+  </p>
+</section>
+
+<!-- ══════════════════════════════════════════
+     08 — FRONTEND
+══════════════════════════════════════════ -->
+<section id="frontend">
+  <div class="sec-label">08 — Frontend Interface</div>
+  <h2 class="sec-title">The user-facing web application</h2>
+
+  <p>
+    The web interface is built with an <strong>HTML-based web interface</strong>, chosen for its rapid
+    development cycle and native compatibility with Python data applications.
+    The application is structured around a single core interaction: the user types any
+    AI term and immediately receives all enriched fields rendered in a clearly labelled layout.
+  </p>
+
+  <div class="card-grid col-2" style="margin-top:28px;">
+    <div class="highlight-box teal" style="margin:0;">
+      <div class="hb-label">User Flow</div>
+      <p style="margin:0; font-size:13px; line-height:1.9;">
+        1. User enters an AI term in the search field.<br>
+        2. Request is forwarded to the FastAPI backend.<br>
+        3. JSON response is parsed and rendered in distinct labelled sections.<br>
+        4. User can immediately search another term without page reload.
+      </p>
+    </div>
+    <div class="highlight-box amber" style="margin:0;">
+      <div class="hb-label">Design Principles</div>
+      <p style="margin:0; font-size:13px; line-height:1.9;">
+        Minimal cognitive overhead — each output section carries a clear label.<br>
+        No registration or authentication required.<br>
+        Responsive layout accommodates both desktop and tablet screens.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     09 — ARCHITECTURE
+══════════════════════════════════════════ -->
+<section id="architecture">
+  <div class="sec-label">09 — System Architecture</div>
+  <h2 class="sec-title">How all the pieces connect</h2>
+
+  <div class="arch-flow" style="margin-top:32px; margin-bottom:12px;">
+    <div class="arch-node">
+      <div class="an-icon">👤</div>
+      <div class="an-title">User</div>
+      <div class="an-sub">Browser</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node" style="border-color:rgba(0,201,167,.4);">
+      <div class="an-icon">🖥️</div>
+      <div class="an-title">HTML</div>
+      <div class="an-sub">Frontend App</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node" style="border-color:rgba(74,144,226,.4);">
+      <div class="an-icon">⚡</div>
+      <div class="an-title">FastAPI</div>
+      <div class="an-sub">REST API</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node" style="border-color:rgba(245,166,35,.4);">
+      <div class="an-icon">📦</div>
+      <div class="an-title">Enhanced JSON</div>
+      <div class="an-sub">1,115 terms</div>
+    </div>
+  </div>
+  <p style="text-align:center; color:var(--text-3); font-size:12px; margin-bottom:36px;">
+    Live request path — the enriched dataset is pre-generated by the offline pipeline below.
+  </p>
+
+  <div class="card">
+    <div style="font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:20px;">Offline Enrichment Pipeline (one-time batch process)</div>
+    <div class="arch-flow">
+      <div class="arch-node">
+        <div class="an-icon">📄</div>
+        <div class="an-title">ICAIRE JSON</div>
+        <div class="an-sub">Raw glossary</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-node" style="border-color:rgba(255,111,97,.4);">
+        <div class="an-icon">🧹</div>
+        <div class="an-title">Pandas</div>
+        <div class="an-sub">Data cleaning</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-node" style="border-color:rgba(155,127,232,.4);">
+        <div class="an-icon">🧠</div>
+        <div class="an-title">GPT-4o-mini</div>
+        <div class="an-sub">LLM enrichment</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-node" style="border-color:rgba(245,166,35,.4);">
+        <div class="an-icon">💾</div>
+        <div class="an-title">Enhanced JSON</div>
+        <div class="an-sub">Stored output</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:40px;">
+    <div class="sec-label" style="margin-bottom:20px;">Technology Stack</div>
+
+    <div class="tech-group">
+      <div class="tech-group-label">AI &amp; Language Model</div>
+      <div class="tech-badges">
+        <span class="tech-badge"><span class="dot dot-purple"></span>OpenAI API (GPT-4o-mini)</span>
+        <span class="tech-badge"><span class="dot dot-teal"></span>Prompt Engineering</span>
+      </div>
+    </div>
+
+    <div class="tech-group">
+      <div class="tech-group-label">Data Processing</div>
+      <div class="tech-badges">
+        <span class="tech-badge"><span class="dot dot-blue"></span>Python 3</span>
+        <span class="tech-badge"><span class="dot dot-blue"></span>Pandas</span>
+        <span class="tech-badge"><span class="dot dot-blue"></span>JSON</span>
+        <span class="tech-badge"><span class="dot dot-blue"></span>Regex (re)</span>
+      </div>
+    </div>
+
+    <div class="tech-group">
+      <div class="tech-group-label">Backend</div>
+      <div class="tech-badges">
+        <span class="tech-badge"><span class="dot dot-teal"></span>FastAPI</span>
+        <span class="tech-badge"><span class="dot dot-teal"></span>Uvicorn</span>
+      </div>
+    </div>
+
+    <div class="tech-group">
+      <div class="tech-group-label">Frontend</div>
+      <div class="tech-badges">
+        <span class="tech-badge"><span class="dot dot-amber"></span>HTML-based web interface</span>
+      </div>
+    </div>
+
+    <div class="tech-group" style="margin-bottom:0;">
+      <div class="tech-group-label">Development Platform</div>
+      <div class="tech-badges">
+        <span class="tech-badge"><span class="dot dot-coral"></span>Google Colab</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     10 — FUTURE WORK
+══════════════════════════════════════════ -->
+<section id="future">
+  <div class="sec-label">10 — Future Work</div>
+  <h2 class="sec-title">Where LexiAI goes next</h2>
+
+  <p>
+    The current prototype delivers a robust English-language enrichment experience.
+    Two high-priority enhancements have been identified for subsequent iterations,
+    both grounded in user-centred learning principles and directly aligned with
+    the ICAIRE challenge's broader cultural-awareness mandate.
+  </p>
+
+  <div class="card-grid col-2" style="margin-top:32px;">
+
+    <div class="fw-item">
+      <div class="fw-icon teal">🌍</div>
+      <div>
+        <div class="fw-title">Arabic Language Support</div>
+        <p class="fw-desc">
+          LexiAI currently generates all enriched content in English only.
+          A planned future release will extend the enrichment pipeline to produce
+          fully Arabic outputs — simple definitions, real-world examples, and analogies —
+          using a bilingual prompt strategy alongside an Arabic-capable language model.
+          This directly serves ICAIRE's mandate of culturally aware AI tools and
+          opens the platform to the large Arabic-speaking student and research community.
+        </p>
+      </div>
+    </div>
+
+    <div class="fw-item">
+      <div class="fw-icon amber">🖼️</div>
+      <div>
+        <div class="fw-title">Visual Memory Anchors</div>
+        <p class="fw-desc">
+          Learning research consistently demonstrates that pairing a concept with a
+          concrete image improves recall significantly. A forthcoming version of LexiAI
+          will attach a simple, purpose-generated illustration to each term — for example,
+          the entry for <em>Natural Language Processing</em> would display a schematic of
+          an electronic translator to provide an immediate visual anchor.
+          These images will be lightweight, schematic, and culturally neutral to
+          ensure broad accessibility across diverse learner groups.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="highlight-box teal" style="margin-top:28px;">
+    <div class="hb-label">Long-Term Vision</div>
+    <p style="margin:0;">
+      Both enhancements together would position LexiAI as a truly multilingual,
+      multimodal AI literacy tool — one that serves learners across language
+      backgrounds and learning styles, directly fulfilling ICAIRE's overarching
+      goal of embedding <strong>cultural awareness into AI education infrastructure</strong>.
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="f-logo">LexiAI</span>
+  <p>Submitted to the ICAIRE AI Glossary Challenge &nbsp;·&nbsp; Track 01 — AI Glossary Tools</p>
+  <p style="margin-top:4px;">In partnership with Beyond Company &nbsp;·&nbsp; Kaggle Platform</p>
+  <p style="margin-top:20px; font-size:11px; letter-spacing:.04em;">
+    Leen Al-Masri &nbsp;·&nbsp; Rahaf Al-Shamri &nbsp;·&nbsp; Noura Alshaigi &nbsp;·&nbsp; Rawan Al-Otaibi
+  </p>
+</footer>
+
+</div>
+</body>
+</html>
